@@ -61,7 +61,7 @@ const DateSelector: FC = () => {
       params.append("endDate", formattedDates.endDate);
     }
     setSearchParams(params);
-    console.log(searchParams);
+    console.log(searchParams.get("startDate"));
 
     // Navigate to the listings page
     // navigate("/listings");
