@@ -5,6 +5,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Container, Button } from "@mui/material";
 import { getAvailableRooms } from "../services/bookingService";
+// import { debugLog } from "../utils/debug";
 
 interface Dates {
   startDate: Dayjs | null;
@@ -28,7 +29,6 @@ export default function DatesSelector() {
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
     // Format the dates to YYYY-MM-DD
     const formattedDates = {
       startDate: dates.startDate ? dates.startDate.format("YYYY-MM-DD") : null,
@@ -37,7 +37,7 @@ export default function DatesSelector() {
 
     try {
       const newTransferResponse = await getAvailableRooms(formattedDates);
-      console.log(newTransferResponse);
+      console.log(newTransferResponse); //object
     } catch (err) {
       console.error((err as Error).message);
     }
