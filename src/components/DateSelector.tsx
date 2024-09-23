@@ -54,7 +54,14 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Container maxWidth="sm">
-        <DateRangePicker value={dates} onChange={handleDateRangeChange} />
+        <DateRangePicker
+          value={dates}
+          localeText={{
+            start: "From",
+            end: "To",
+          }}
+          onChange={handleDateRangeChange}
+        />
         <Button variant="contained" onClick={handleSubmit}>
           Find rooms
         </Button>
