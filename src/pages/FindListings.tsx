@@ -1,10 +1,9 @@
 import * as React from "react";
 import { FC, useEffect } from "react";
-// import DatesSelector from "../components/DateSelector";
-// import ShowListings from "../components/ShowListings";
 import { useSearchParams } from "react-router-dom";
 import { getAvailableRooms } from "../services/bookingService";
 import ShowListings from "../components/ShowListings";
+import DateSelector from "../components/DateSelector";
 
 interface Room {
   room_id: number;
@@ -15,15 +14,15 @@ interface RoomsResponse {
 }
 
 const FindListingsPage: FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [rooms, setRooms] = React.useState<RoomsResponse>({
     availableRooms: [],
   });
+
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
 
   useEffect(() => {
-    // If startDate and endDate are available, load data
     if (startDate && endDate) {
       const loadData = async () => {
         const formattedDates = { startDate, endDate };
@@ -45,6 +44,7 @@ const FindListingsPage: FC = () => {
   return (
     <>
       <h1>All available listings</h1>
+      <DateSelector initialDates={{ startDate, endDate }} />
       <ShowListings rooms={rooms.availableRooms} />
     </>
   );
