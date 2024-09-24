@@ -5,24 +5,33 @@ import AdminLogInPage from "./pages/AdminLogIn";
 import { useState, createContext } from "react";
 import * as authService from "../src/services/authService";
 import AdminDashPage from "./pages/AdminDash";
+import NavbarAdmin from "./components/NavbarAdmin";
+import BookingsPage from "./pages/Bookings";
 export const AuthedUserContext = createContext(null);
 
 function App() {
   const [user, setUser] = useState(authService.getUser());
+  const handleSignout: () => void = () => {
+    authService.signout(); // Call the signout function
+    setUser(null); // Reset user state
+  };
+
   return (
     <AuthedUserContext.Provider value={user}>
+      {user && <NavbarAdmin handleSignout={handleSignout} />}
       <Routes>
         {user ? (
           <>
             {/* Protected Route for Admin */}
             <Route path="/admin-dashboard" element={<AdminDashPage />} />
+            <Route path="/list-bookings" element={<BookingsPage />} />
           </>
         ) : (
           <>
-            {/*Public Routes*/}
             <Route path="/" element={<HomePage />} />
           </>
         )}
+        {/*Public Routes*/}
         <Route path="/" element={<HomePage />} />
         <Route path="/listings" element={<FindListingsPage />} />
         <Route
@@ -32,8 +41,7 @@ function App() {
 
         {/* <Route path="/allProperties" element={<StayhereProperties />} />
         <Route path="/allRooms" element={<StayhereRooms />} />
-        <Route path="/allCustomers" element={<Customers />} />
-        <Route path="/allBookings" element={<Bookings />} /> */}
+        <Route path="/allCustomers" element={<Customers />} />*/}
       </Routes>
     </AuthedUserContext.Provider>
   );

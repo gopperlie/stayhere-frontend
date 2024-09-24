@@ -1,9 +1,10 @@
 import { FC } from "react";
+import Dashboard from "../components/Dashbard";
 
 const AdminDashPage: FC = () => {
   return (
     <>
-      <h1>only accessible by admins</h1>
+      <Dashboard />
     </>
   );
 };
