@@ -29,4 +29,28 @@ const getAvailableRooms = async (dates: Dates) => {
   }
 };
 
-export { getAvailableRooms };
+const getAllBookings = async (dates: Dates) => {
+  try {
+    const res = await fetch(
+      `${BACKEND_URL}/api/bookings/check-available-rooms`,
+      {
+        method: "POST",
+        headers: {
+          // Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dates),
+      }
+    );
+    const json = await res.json();
+    return json;
+    if (json.error) {
+      throw new Error(json.error);
+    }
+  } catch (err) {
+    console.log(err as Error);
+    throw err;
+  }
+};
+
+export { getAvailableRooms, getAllBookings };

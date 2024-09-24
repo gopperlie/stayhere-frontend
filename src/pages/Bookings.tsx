@@ -1,9 +1,10 @@
 import { FC } from "react";
+import BookingsList from "../components/BookingsList";
 
 const BookingsPage: FC = () => {
   return (
     <>
-      <h1>Bookings: only accessible by admins</h1>
+      <BookingsList />
     </>
   );
 };
