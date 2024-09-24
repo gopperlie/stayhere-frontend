@@ -6,7 +6,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from "../services/authService";
 
-const AdminLogInPage: FC = () => {
+type user = {
+  admin_id: number;
+  exp: number;
+  iat: number;
+  username: string;
+};
+
+interface AdminLogInPageProps {
+  setUser: React.Dispatch<user | null>;
+}
+
+const AdminLogInPage: FC<AdminLogInPageProps> = ({ setUser }) => {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -27,9 +38,9 @@ const AdminLogInPage: FC = () => {
     e.preventDefault();
     try {
       const user = await authService.signin(formData);
-      //   props.setUser(user);
+      setUser(user);
       console.log(user);
-      navigate("/");
+      navigate("/admin-dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) {
         updateMessage(err.message);
