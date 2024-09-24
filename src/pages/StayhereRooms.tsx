@@ -1,5 +1,11 @@
-export default function StayhereRooms() {
-  <>
-    <h1>All Room Types</h1>
-  </>;
-}
+import { FC } from "react";
+
+const RoomsTypePage: FC = () => {
+  return (
+    <>
+      <h1>Room Types: Public</h1>
+    </>
+  );
+};
+
+export default RoomsTypePage;
