@@ -13,6 +13,7 @@ const ShowListings: React.FC<RoomsListProps> = ({ rooms }) => {
         <div key={room.room_id}>Room ID: {room.room_id}</div>
       ))}
     </div>
+    //need to add a button to book. before that need to sign up as customer
   );
 };
 
