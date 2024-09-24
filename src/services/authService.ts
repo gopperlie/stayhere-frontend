@@ -1,8 +1,13 @@
 const BACKEND_URL = import.meta.env.VITE_EXPRESS_BACKEND_URL;
 
-const signin = async (user) => {
+type user = {
+  username: string;
+  password: string;
+};
+
+const signin = async (user: user) => {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/user/login`, {
+    const res = await fetch(`${BACKEND_URL}/api/admins/admin-login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(user),
@@ -14,29 +19,12 @@ const signin = async (user) => {
     if (json.token) {
       localStorage.setItem("token", json.token);
       const user = JSON.parse(atob(json.token.split(".")[1]));
+      console.log(user);
       return user;
     }
   } catch (err) {
     console.log(err);
     throw err;
-  }
-};
-
-const signup = async (formData) => {
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/user/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    const json = await res.json();
-    if (json.error) {
-      throw new Error(json.error);
-    }
-    localStorage.setItem("token", json.token);
-    return json;
-  } catch (err) {
-    throw new Error(err);
   }
 };
 
@@ -46,3 +34,9 @@ const getUser = () => {
   const user = JSON.parse(atob(token.split(".")[1]));
   return user;
 };
+
+const signout = () => {
+  localStorage.removeItem("token");
+};
+
+export { signin, signout, getUser };

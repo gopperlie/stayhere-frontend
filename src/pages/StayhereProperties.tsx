@@ -1,5 +1,11 @@
-export default function StayhereProperties() {
-  <>
-    <h1>All Properties</h1>
-  </>;
-}
+import { FC } from "react";
+
+const PropertiesPage: FC = () => {
+  return (
+    <>
+      <h1>renders all properties?</h1>
+    </>
+  );
+};
+
+export default PropertiesPage;
