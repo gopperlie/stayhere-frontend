@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { getAllBookings } from "@/services/bookingService";
-import getDateInSingapore from "@/utils/getDateWithoutTime";
+import { getDateInSingapore } from "@/utils/getDateWithoutTime";
 import {
   Table,
   TableBody,
