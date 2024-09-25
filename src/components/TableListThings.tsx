@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { getAllBookings } from "@/services/bookingService";
 import { getDateInSingapore } from "@/utils/getDateWithoutTime";
 import {
@@ -20,7 +20,10 @@ interface Booking {
   start_date: string; // or Date
   end_date: string; // or Date
   status: string;
+  date_created: string;
+  last_modified: string;
 }
+import { cancelBooking } from "@/services/bookingService";
 
 const TableListThings: FC = () => {
   const [allBookings, setAllBookings] = useState<Booking[]>([]); // Set the type to an array of bookings
@@ -51,6 +54,14 @@ const TableListThings: FC = () => {
     return <div>Loading...</div>;
   }
 
+  const handleCancel = async (bookingId: string) => {
+    try {
+      cancelBooking(bookingId);
+      window.location.reload();
+    } catch (err) {
+      console.error("Failed to cancel", err);
+    }
+  };
   return (
     <TableContainer component={Paper} sx={{ width: "75%", margin: "0 auto" }}>
       <h1>Bookings Table</h1>
@@ -63,6 +74,9 @@ const TableListThings: FC = () => {
             <TableCell>Start Date</TableCell>
             <TableCell>End Date</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Date Created</TableCell>
+            <TableCell>Last Modified</TableCell>
+
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -75,6 +89,8 @@ const TableListThings: FC = () => {
               <TableCell>{getDateInSingapore(booking.start_date)}</TableCell>
               <TableCell>{getDateInSingapore(booking.end_date)}</TableCell>
               <TableCell>{booking.status}</TableCell>
+              <TableCell>{getDateInSingapore(booking.date_created)}</TableCell>
+              <TableCell>{booking.last_modified}</TableCell>
               <TableCell align="right">
                 <Button
                   variant="contained"
@@ -86,7 +102,11 @@ const TableListThings: FC = () => {
                 >
                   Edit
                 </Button>
-                <Button variant="outlined" color="secondary">
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => handleCancel(String(booking.booking_id))}
+                >
                   Cancel
                 </Button>
               </TableCell>

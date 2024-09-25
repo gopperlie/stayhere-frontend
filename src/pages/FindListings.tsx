@@ -7,6 +7,9 @@ import DateSelector from "../components/DateSelector";
 
 interface Room {
   room_id: number;
+  room_type: string;
+  price_per_night: number;
+  capacity: number;
 }
 
 interface RoomsResponse {
@@ -26,12 +29,13 @@ const FindListingsPage: FC = () => {
     if (startDate && endDate) {
       const loadData = async () => {
         const formattedDates = { startDate, endDate };
-
+        // console.log(formattedDates);
         try {
           const response: RoomsResponse = await getAvailableRooms(
             formattedDates
           );
           setRooms(response);
+          // console.log(response);
         } catch (err) {
           console.error((err as Error).message);
         }

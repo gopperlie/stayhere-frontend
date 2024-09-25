@@ -26,6 +26,7 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  console.log(`searchParams:${searchParams}`);
 
   const handleDateRangeChange = (newRange: DateRange<Dayjs>) => {
     setDates(newRange);
@@ -53,7 +54,16 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Container maxWidth="sm">
+      <Container
+        maxWidth="sm"
+        // style={{
+        //   display: "flex", // Enable flexbox
+        //   flexDirection: "column", // Stack items vertically
+        //   justifyContent: "center", // Center items vertically
+        //   alignItems: "center", // Center items horizontally
+        //   minHeight: "100vh", // Make the container fill the viewport height
+        // }}
+      >
         <DateRangePicker
           value={dates}
           localeText={{

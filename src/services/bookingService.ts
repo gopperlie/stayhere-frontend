@@ -86,6 +86,29 @@ const modifyBooking = async (
   }
 };
 
+const cancelBooking = async (bookingId: string | undefined) => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/bookings/cancel/${bookingId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || "Failed to cancel booking");
+    }
+
+    const json = await res.json();
+    return json;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const getAllBookings = async () => {
   try {
     const res = await fetch(`${BACKEND_URL}/api/bookings/`, {
@@ -139,6 +162,7 @@ export {
   getAvailableRooms,
   newBooking,
   modifyBooking,
+  cancelBooking,
   getAllBookings,
   getBookingById,
 };
