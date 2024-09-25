@@ -7,7 +7,9 @@ import * as authService from "../src/services/authService";
 import AdminDashPage from "./pages/AdminDash";
 import NavbarAdmin from "./components/NavbarAdmin";
 import BookingsPage from "./pages/Bookings";
-export const AuthedUserContext = createContext(null);
+import ModifyBookingPage from "./pages/ModifyBookingPage";
+
+const AuthedUserContext = createContext(null);
 
 function App() {
   const [user, setUser] = useState(authService.getUser());
@@ -25,6 +27,10 @@ function App() {
             {/* Protected Route for Admin */}
             <Route path="/admin-dashboard" element={<AdminDashPage />} />
             <Route path="/list-bookings" element={<BookingsPage />} />
+            <Route
+              path="/modify-booking/:bookingId"
+              element={<ModifyBookingPage />}
+            />
           </>
         ) : (
           <>
