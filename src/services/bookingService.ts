@@ -5,6 +5,13 @@ interface Dates {
   endDate: string | null;
 }
 
+interface Booking {
+  roomId: string;
+  customerId: string;
+  startDate: string;
+  endDate: string;
+}
+
 const getAvailableRooms = async (dates: Dates) => {
   try {
     const res = await fetch(
@@ -25,6 +32,56 @@ const getAvailableRooms = async (dates: Dates) => {
     return json;
   } catch (err) {
     console.log(err as Error);
+    throw err;
+  }
+};
+
+const newBooking = async (newBooking: Booking) => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/bookings/new`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newBooking),
+    });
+
+    if (!res.ok) {
+      const error = await res.json(); // Check for JSON response first
+      throw new Error(error.message || "Failed to create new booking");
+    }
+
+    const json = await res.json();
+    return json;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+const modifyBooking = async (
+  booking: Booking,
+  bookingId: string | undefined
+) => {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/bookings/modify/${bookingId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    });
+
+    if (!res.ok) {
+      const error = await res.json();
+      throw new Error(error.message || "Failed to modify booking");
+    }
+
+    const json = await res.json();
+    return json;
+  } catch (err) {
+    console.error(err);
     throw err;
   }
 };
@@ -78,4 +135,10 @@ const getBookingById = async (bookingId: string) => {
   }
 };
 
-export { getAvailableRooms, getAllBookings, getBookingById };
+export {
+  getAvailableRooms,
+  newBooking,
+  modifyBooking,
+  getAllBookings,
+  getBookingById,
+};

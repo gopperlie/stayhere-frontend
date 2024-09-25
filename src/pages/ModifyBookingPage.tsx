@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBookingById } from "@/services/bookingService";
+import { getBookingById, modifyBooking } from "@/services/bookingService";
 import { formatDateForInput } from "@/utils/getDateWithoutTime";
 
 type booking = {
@@ -21,11 +21,18 @@ type booking = {
   status: string;
 };
 
+type FormBooking = {
+  roomId: string;
+  customerId: string;
+  startDate: string;
+  endDate: string;
+};
+
 const ModifyBookingPage: FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [error, setError] = React.useState<string | null>(null);
   const { bookingId } = useParams<{ bookingId: string }>();
-  console.log(bookingId);
+
   const [bookingData, setBookingData] = React.useState<booking>({
     room_id: "Room ID",
     customer_id: "Customer ID",
@@ -38,7 +45,7 @@ const ModifyBookingPage: FC = () => {
     const fetchBooking = async () => {
       try {
         if (bookingId) {
-          const data = await getBookingById(bookingId); // Ensure id is a string
+          const data = await getBookingById(bookingId);
           setBookingData(data);
         }
       } catch (err) {
@@ -68,39 +75,29 @@ const ModifyBookingPage: FC = () => {
     }
     console.log(bookingData);
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(bookingData);
-    // try {
-    //   const newSubmitResponse = await modifyBooking(bookingData);
-    //   console.log(newSubmitResponse);
-    //   navigate("/bookings");
-    // } catch (err) {
-    //   console.error(err);
-    //   setError("Failed to submit changes");
-    // }
+    const typedBookingData: FormBooking = {
+      roomId: bookingData.room_id, // Make sure these are mapped correctly
+      customerId: bookingData.customer_id,
+      startDate: bookingData.start_date,
+      endDate: bookingData.end_date,
+    };
+
+    try {
+      const newSubmitResponse = await modifyBooking(
+        typedBookingData,
+        bookingId
+      );
+      console.log(newSubmitResponse);
+      navigate("/list-bookings");
+    } catch (err) {
+      console.error(err);
+      setError("Failed to submit changes");
+      console.log(error);
+    }
   };
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = event.target;
-  //   setBookingData({ ...bookingData, [name]: value });
-  // };
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   setIsLoading(true);
-  //   try {
-  //     const newTransferResponse = await newTransfer({
-  //       ...transferData,
-  //       amount,
-  //     });
-  //     console.log(newTransferResponse);
-  //     navigate("/account/main");
-  //   } catch (err) {
-  //     console.error(err.message);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+
   return (
     <Box
       component="form"
@@ -172,7 +169,6 @@ const ModifyBookingPage: FC = () => {
             label="Status"
             name="status"
             value={bookingData.status}
-            onChange={handleChange}
             required
           >
             <MenuItem value="active">Active</MenuItem>
