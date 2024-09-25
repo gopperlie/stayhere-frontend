@@ -20,9 +20,9 @@ type booking = {
   end_date: string;
   status: string;
 };
-const navigate = useNavigate();
 
 const ModifyBookingPage: FC = () => {
+  // const navigate = useNavigate();
   const [error, setError] = React.useState<string | null>(null);
   const { bookingId } = useParams<{ bookingId: string }>();
   console.log(bookingId);
