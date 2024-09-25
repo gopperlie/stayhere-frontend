@@ -29,19 +29,16 @@ const getAvailableRooms = async (dates: Dates) => {
   }
 };
 
-const getAllBookings = async (dates: Dates) => {
+const getAllBookings = async () => {
   try {
-    const res = await fetch(
-      `${BACKEND_URL}/api/bookings/check-available-rooms`,
-      {
-        method: "POST",
-        headers: {
-          // Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dates),
-      }
-    );
+    const res = await fetch(`${BACKEND_URL}/api/bookings/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(dates),
+    });
     const json = await res.json();
     return json;
     if (json.error) {
