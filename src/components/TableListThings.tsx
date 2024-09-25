@@ -11,6 +11,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface Booking {
   booking_id: number;
@@ -23,7 +24,8 @@ interface Booking {
 
 const TableListThings: FC = () => {
   const [allBookings, setAllBookings] = useState<Booking[]>([]); // Set the type to an array of bookings
-  const [error, setError] = useState<string | null>(null); // State to handle any errors
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   // useEffect to fetch bookings on component mount
   useEffect(() => {
@@ -78,6 +80,9 @@ const TableListThings: FC = () => {
                   variant="contained"
                   color="primary"
                   style={{ marginRight: 10 }}
+                  onClick={() =>
+                    navigate(`/modify-booking/${booking.booking_id}`)
+                  }
                 >
                   Edit
                 </Button>
