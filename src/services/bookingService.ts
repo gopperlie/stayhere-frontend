@@ -5,6 +5,12 @@ interface Dates {
   endDate: string | null;
 }
 
+interface BookingExCId {
+  roomId: string;
+  startDate: string;
+  endDate: string;
+}
+
 interface Booking {
   roomId: string;
   customerId: string;
@@ -36,14 +42,18 @@ const getAvailableRooms = async (dates: Dates) => {
   }
 };
 
-const newBooking = async (newBooking: Booking) => {
+const newBooking = async (customerId: string, newBooking: BookingExCId) => {
   try {
+    const newBookingData = {
+      ...newBooking,
+      customerId,
+    };
     const res = await fetch(`${BACKEND_URL}/api/bookings/new`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newBooking),
+      body: JSON.stringify(newBookingData),
     });
 
     if (!res.ok) {

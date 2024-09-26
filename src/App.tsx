@@ -8,6 +8,7 @@ import AdminDashPage from "./pages/AdminDash";
 import NavbarAdmin from "./components/NavbarAdmin";
 import BookingsPage from "./pages/Bookings";
 import ModifyBookingPage from "./pages/ModifyBookingPage";
+import NewCxNewBookingPage from "./pages/NewCxNewBooking";
 
 const AuthedUserContext = createContext(null);
 
@@ -40,6 +41,7 @@ function App() {
         {/*Public Routes*/}
         <Route path="/" element={<HomePage />} />
         <Route path="/listings" element={<FindListingsPage />} />
+        <Route path="/newcxnewbooking" element={<NewCxNewBookingPage />} />
         <Route
           path="/admin-login"
           element={<AdminLogInPage setUser={setUser} />}
