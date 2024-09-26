@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { newCustomer } from "@/services/custService";
+import { newBooking } from "@/services/bookingService";
 
 interface Customer {
   family_name: string;
@@ -22,7 +23,6 @@ interface Customer {
 
 type FormBooking = {
   roomId: string;
-  customerId: string;
   startDate: string;
   endDate: string;
 };
@@ -38,7 +38,12 @@ const NewCxNewBookingPage: FC = () => {
     date_of_birth: "",
     gender: "",
   });
-  const [customerId, setcustomerId] = React.useState<string | null>(null);
+
+  const [bookingData, setBookingData] = React.useState<FormBooking>({
+    roomId: "",
+    startDate: "",
+    endDate: "",
+  });
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -66,16 +71,43 @@ const NewCxNewBookingPage: FC = () => {
     }));
   };
 
+  const handleChangeBooking = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setBookingData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    let customerId: string | null = null; // Declare customerId in the outer scope
+
     try {
       const newSubmitResponse = await newCustomer(customerData);
-      setcustomerId(newSubmitResponse.customer.customer_id);
-      await console.log(customerId);
+      customerId = newSubmitResponse.customer.customer_id; // Assign value to customerId
+      console.log("Customer created successfully:", customerId);
     } catch (err) {
-      console.error(err);
-      setError("Failed to submit changes");
-      console.log(error);
+      console.error("Failed to create customer:", err);
+      setError("Failed to submit customer data");
+      return; // Exit if customer creation fails
+    }
+
+    // Ensure customerId is set before attempting the booking
+    if (customerId) {
+      try {
+        const newBookingData = {
+          customerId, // Now customerId is accessible here
+          ...bookingData, // Assume you have bookingDetails prepared
+        };
+
+        const newBookingResponse = await newBooking(newBookingData);
+        console.log("Booking created successfully:", newBookingResponse);
+      } catch (err) {
+        console.error("Failed to create booking:", err);
+        setError("Failed to submit new booking");
+      }
     }
   };
 
@@ -140,6 +172,7 @@ const NewCxNewBookingPage: FC = () => {
           name="email"
           value={customerData.email}
           onChange={handleChangeEmail}
+          helperText={error}
         />
       </Box>
       <Box
@@ -188,6 +221,54 @@ const NewCxNewBookingPage: FC = () => {
           name="gender"
           value={customerData.gender}
           onChange={handleChangeCxExEmail}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end", // Align the text fields and labels to the left
+        }}
+      >
+        <Box sx={{ marginRight: 2 }}>Room ID:</Box>
+        <TextField
+          id="roomId"
+          label="roomId"
+          name="roomId"
+          value={bookingData.roomId}
+          onChange={handleChangeBooking}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end", // Align the text fields and labels to the left
+        }}
+      >
+        <Box sx={{ marginRight: 2 }}>Start Date:</Box>
+        <TextField
+          id="startDate"
+          label="YYYY-MM-DD"
+          name="startDate"
+          value={bookingData.startDate}
+          onChange={handleChangeBooking}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end", // Align the text fields and labels to the left
+        }}
+      >
+        <Box sx={{ marginRight: 2 }}>End Date:</Box>
+        <TextField
+          id="endDate"
+          label="YYYY-MM-DD"
+          name="endDate"
+          value={bookingData.endDate}
+          onChange={handleChangeBooking}
         />
       </Box>
       <Button variant="contained" onClick={handleSubmit}>
