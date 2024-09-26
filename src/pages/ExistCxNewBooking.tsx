@@ -110,7 +110,9 @@ const ExistCxNewBookingPage: FC = () => {
         const cxEmail = {
           email: username,
         };
-        customerId = await getCustomerId(cxEmail);
+        const submitResponse = await getCustomerId(cxEmail);
+        customerId = submitResponse.customer_id;
+        console.log(customerId);
       } catch (err) {
         console.error("Failed to get customer ID:", err);
         setError("Failed to get customer ID");
