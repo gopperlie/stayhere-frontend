@@ -10,8 +10,8 @@ interface Customer {
   family_name: string;
   given_name: string;
   email: string;
-  nationality: string;
   phone_number: string;
+  nationality: string;
   date_of_birth: string;
   gender: string;
 }
@@ -45,8 +45,8 @@ const NewCxNewBookingPage: FC = () => {
     family_name: "",
     given_name: "",
     email: "",
-    nationality: "",
     phone_number: "",
+    nationality: "",
     date_of_birth: "",
     gender: "",
   });

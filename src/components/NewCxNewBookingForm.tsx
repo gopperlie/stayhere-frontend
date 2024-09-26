@@ -6,8 +6,8 @@ interface Customer {
   family_name: string;
   given_name: string;
   email: string;
-  nationality: string;
   phone_number: string;
+  nationality: string;
   date_of_birth: string;
   gender: string;
 }
@@ -101,6 +101,22 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           value={customerData.email}
           onChange={handleChangeEmail}
           helperText={error}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end", // Align the text fields and labels to the left
+        }}
+      >
+        <Box sx={{ marginRight: 2 }}>Phone no.</Box>
+        <TextField
+          id="phone_number"
+          label="phone_number"
+          name="phone_number"
+          value={customerData.phone_number}
+          onChange={handleChangeCxExEmail}
         />
       </Box>
       <Box
