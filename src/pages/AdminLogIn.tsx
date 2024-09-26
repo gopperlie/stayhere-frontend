@@ -5,19 +5,22 @@ import { Paper, Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from "../services/authService";
+import { useAuthedUser } from "@/components/useAuthedUserHook";
 
-type user = {
-  admin_id: number;
-  exp: number;
-  iat: number;
-  username: string;
-};
+// type user = {
+//   username: string;
+//   user_id: number;
+//   role: string;
+//   iat: number;
+//   exp: number;
+// };
 
-interface AdminLogInPageProps {
-  setUser: React.Dispatch<user | null>;
-}
+// interface AdminLogInPageProps {
+//   setUser: React.Dispatch<user | null>;
+// }
 
-const AdminLogInPage: FC<AdminLogInPageProps> = ({ setUser }) => {
+const AdminLogInPage: FC = () => {
+  const { setUser } = useAuthedUser();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [formData, setFormData] = useState({
