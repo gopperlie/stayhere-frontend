@@ -10,6 +10,7 @@ import ModifyBookingPage from "./pages/ModifyBookingPage";
 import NewCxNewBookingPage from "./pages/NewCxNewBooking";
 import { useAuthedUser } from "./components/useAuthedUserHook";
 import UnauthorizedPage from "./pages/UnauthorisedPage";
+import ExistCxNewBookingPage from "./pages/ExistCxNewBooking";
 
 function App() {
   const { user, setUser } = useAuthedUser();
@@ -44,6 +45,10 @@ function App() {
         <Route
           path="/newcxnewbooking/:roomId/:startDate/:endDate"
           element={<NewCxNewBookingPage />}
+        />
+        <Route
+          path="/extcxnewbooking/:roomId/:startDate/:endDate"
+          element={<ExistCxNewBookingPage />}
         />
         <Route path="/admin-login" element={<AdminLogInPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />

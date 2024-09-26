@@ -1,13 +1,13 @@
 import { FC } from "react";
 import * as React from "react";
-import { newCustomer } from "@/services/custService";
 import { newBooking } from "@/services/bookingService";
 import ShowConfirmation from "@/components/ShowConfirmation";
 import { useParams } from "react-router-dom";
-import { customerSignup } from "@/services/authService";
+import { getCustomerId, cxLogin } from "@/services/custService";
+import ExistCxNewBookingForm from "@/components/ExistCxNewBookingForm";
 
 interface ExistingCustomer {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -41,12 +41,23 @@ interface DecodedUser {
   exp: number;
 }
 const ExistCxNewBookingPage: FC = () => {
+  const customerData = {
+    family_name: "Sir",
+    given_name: "Madam",
+    email: "",
+    phone_number: "",
+    nationality: "",
+    date_of_birth: "",
+    gender: "",
+    password: "",
+  };
   const { roomId, startDate, endDate } = useParams();
   const [error, setError] = React.useState<string | null>(null);
-  const [customerData, setCustomerData] = React.useState<ExistingCustomer>({
-    email: "",
-    password: "",
-  });
+  const [extCustomerData, setExtCustomerData] =
+    React.useState<ExistingCustomer>({
+      username: "",
+      password: "",
+    });
 
   const [bookingData, setBookingData] = React.useState<FormBooking>({
     roomId: roomId || "",
@@ -71,7 +82,7 @@ const ExistCxNewBookingPage: FC = () => {
     React.useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCustomerData((prevData) => ({
+    setExtCustomerData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -84,24 +95,28 @@ const ExistCxNewBookingPage: FC = () => {
 
     // Step 1: Customer logs in
     try {
-      const newSubmitResponse = await customerLogin(customerData);
-      customerId = newSubmitResponse.customer.customer_id; // Assign value to customerId
-      console.log("Customer logged in successfully:", customerId);
+      user = await cxLogin(extCustomerData); // Assign value to customerId
+      console.log("Customer logged in successfully");
     } catch (err) {
-      console.error("Failed to create customer:", err);
-      setError("Failed to submit customer data");
+      console.error("Failed to log in customer:", err);
+      setError("Failed to log in");
+      console.log(error);
       return; // Exit if fail to log in
     }
 
-    // Step 2: Signup the customer
-    try {
-      const { email, password } = customerData;
-      const cxSignUpData = { email, password };
-      user = await customerSignup(cxSignUpData);
-    } catch (err) {
-      console.error("Failed to signup customer:", err);
-      setError("Failed to signup customer data");
-      return; // Exit if customer signup fails
+    if (user) {
+      try {
+        const { username } = extCustomerData;
+        const cxEmail = {
+          email: username,
+        };
+        customerId = await getCustomerId(cxEmail);
+      } catch (err) {
+        console.error("Failed to get customer ID:", err);
+        setError("Failed to get customer ID");
+        console.log(error);
+        return; // Exit if customer signup fails
+      }
     }
 
     // Step 3: Create the booking
@@ -122,7 +137,35 @@ const ExistCxNewBookingPage: FC = () => {
       }
     }
   };
-  return <></>;
+
+  React.useEffect(() => {
+    if (roomId) {
+      setBookingData((prev) => ({ ...prev, roomId }));
+    }
+    if (startDate) {
+      setBookingData((prev) => ({ ...prev, startDate }));
+    }
+    if (endDate) {
+      setBookingData((prev) => ({ ...prev, endDate }));
+    }
+  }, [roomId, startDate, endDate]);
+  return (
+    <>
+      {reservationSuccessful ? (
+        <ShowConfirmation
+          customerData={customerData}
+          confBookingData={confBookingData}
+        />
+      ) : (
+        <ExistCxNewBookingForm
+          extCustomerData={extCustomerData}
+          bookingData={bookingData}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
+      )}
+    </>
+  );
 };
 
 export default ExistCxNewBookingPage;

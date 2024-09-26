@@ -66,7 +66,7 @@ const getCustomerId = async (customerEmail: CustomerEmail) => {
   }
 };
 
-const cxlogin = async (existingcx: ExistingCx) => {
+const cxLogin = async (existingcx: ExistingCx) => {
   try {
     const res = await fetch(`${BACKEND_URL}/api/customers/cxlogin`, {
       method: "POST",
@@ -89,4 +89,4 @@ const cxlogin = async (existingcx: ExistingCx) => {
   }
 };
 
-export { newCustomer, getCustomerId, cxlogin };
+export { newCustomer, getCustomerId, cxLogin };

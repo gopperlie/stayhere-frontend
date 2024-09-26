@@ -174,7 +174,7 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           justifyContent: "flex-end", // Align the text fields and labels to the left
         }}
       >
-        <Box sx={{ marginRight: 2 }}>Gender:</Box>
+        <Box sx={{ marginRight: 2 }}>Password:</Box>
         <TextField
           id="password"
           label="Password"
