@@ -6,6 +6,7 @@ import {
   Typography,
   Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface Room {
   room_id: number;
@@ -16,9 +17,17 @@ interface Room {
 
 interface RoomsListProps {
   rooms: Room[];
+  startDate: string | null;
+  endDate: string | null;
 }
 
-const ShowListings: React.FC<RoomsListProps> = ({ rooms }) => {
+const ShowListings: React.FC<RoomsListProps> = ({
+  rooms,
+  startDate,
+  endDate,
+}) => {
+  const navigate = useNavigate();
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
       {rooms.map((room) => (
@@ -39,7 +48,16 @@ const ShowListings: React.FC<RoomsListProps> = ({ rooms }) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small">Book</Button>
+            <Button
+              size="small"
+              onClick={() =>
+                navigate(
+                  `/newcxnewbooking/${room.room_id}/${startDate}/${endDate}`
+                )
+              }
+            >
+              Book
+            </Button>
             <Button size="small">Learn More</Button>
           </CardActions>
         </Card>

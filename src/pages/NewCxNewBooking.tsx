@@ -4,6 +4,7 @@ import { newCustomer } from "@/services/custService";
 import { newBooking } from "@/services/bookingService";
 import ShowConfirmation from "@/components/ShowConfirmation";
 import NewCxNewBookingForm from "@/components/NewCxNewBookingForm";
+import { useParams } from "react-router-dom";
 
 interface Customer {
   family_name: string;
@@ -38,6 +39,7 @@ interface NewConfBooking {
 }
 
 const NewCxNewBookingPage: FC = () => {
+  const { roomId, startDate, endDate } = useParams();
   const [error, setError] = React.useState<string | null>(null);
   const [customerData, setCustomerData] = React.useState<Customer>({
     family_name: "",
@@ -50,9 +52,9 @@ const NewCxNewBookingPage: FC = () => {
   });
 
   const [bookingData, setBookingData] = React.useState<FormBooking>({
-    roomId: "",
-    startDate: "",
-    endDate: "",
+    roomId: roomId || "",
+    startDate: startDate || "",
+    endDate: endDate || "",
   });
   const [confBookingData, setConfBookingData] = React.useState<NewConfBooking>({
     message: "",
@@ -137,6 +139,17 @@ const NewCxNewBookingPage: FC = () => {
       }
     }
   };
+  React.useEffect(() => {
+    if (roomId) {
+      setBookingData((prev) => ({ ...prev, roomId }));
+    }
+    if (startDate) {
+      setBookingData((prev) => ({ ...prev, startDate }));
+    }
+    if (endDate) {
+      setBookingData((prev) => ({ ...prev, endDate }));
+    }
+  }, [roomId, startDate, endDate]);
 
   return (
     <>

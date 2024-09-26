@@ -33,8 +33,8 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
   error,
   handleChangeEmail,
   handleChangeCxExEmail,
-  handleChangeBooking,
   handleSubmit,
+  //   handleChangeBooking,
 }) => {
   return (
     <Box
@@ -162,7 +162,7 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           label="roomId"
           name="roomId"
           value={bookingData.roomId}
-          onChange={handleChangeBooking}
+          disabled={true}
         />
       </Box>
       <Box
@@ -178,7 +178,7 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           label="YYYY-MM-DD"
           name="startDate"
           value={bookingData.startDate}
-          onChange={handleChangeBooking}
+          disabled={true}
         />
       </Box>
       <Box
@@ -194,7 +194,7 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           label="YYYY-MM-DD"
           name="endDate"
           value={bookingData.endDate}
-          onChange={handleChangeBooking}
+          disabled={true}
         />
       </Box>
       <Button variant="contained" type="submit">
