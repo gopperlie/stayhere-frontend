@@ -5,6 +5,7 @@ import { newBooking } from "@/services/bookingService";
 import ShowConfirmation from "@/components/ShowConfirmation";
 import NewCxNewBookingForm from "@/components/NewCxNewBookingForm";
 import { useParams } from "react-router-dom";
+import { customerSignup } from "@/services/authService";
 
 interface Customer {
   family_name: string;
@@ -14,6 +15,7 @@ interface Customer {
   nationality: string;
   date_of_birth: string;
   gender: string;
+  password: string;
 }
 
 type FormBooking = {
@@ -38,6 +40,14 @@ interface NewConfBooking {
   booking: ConfBooking;
 }
 
+interface DecodedUser {
+  username: string;
+  user_id: number;
+  role: string;
+  iat: number; // issued at time
+  exp: number;
+}
+
 const NewCxNewBookingPage: FC = () => {
   const { roomId, startDate, endDate } = useParams();
   const [error, setError] = React.useState<string | null>(null);
@@ -49,6 +59,7 @@ const NewCxNewBookingPage: FC = () => {
     nationality: "",
     date_of_birth: "",
     gender: "",
+    password: "",
   });
 
   const [bookingData, setBookingData] = React.useState<FormBooking>({
@@ -111,7 +122,9 @@ const NewCxNewBookingPage: FC = () => {
     e.preventDefault();
 
     let customerId: string | null = null; // Declare customerId in the outer scope
+    let user: DecodedUser | null = null;
 
+    // Step 1: Create the customer
     try {
       const newSubmitResponse = await newCustomer(customerData);
       customerId = newSubmitResponse.customer.customer_id; // Assign value to customerId
@@ -122,8 +135,20 @@ const NewCxNewBookingPage: FC = () => {
       return; // Exit if customer creation fails
     }
 
-    // Ensure customerId is set before attempting the booking
-    if (customerId) {
+    // Step 2: Signup the customer
+    try {
+      const { email, password } = customerData;
+      const cxSignUpData = { email, password };
+      user = await customerSignup(cxSignUpData);
+    } catch (err) {
+      console.error("Failed to signup customer:", err);
+      setError("Failed to signup customer data");
+      return; // Exit if customer signup fails
+    }
+
+    // Step 3: Create the booking
+    if (customerId && user) {
+      // Ensure customerId is set before attempting the booking
       try {
         const newBookingData = {
           customerId, // Now customerId is accessible here

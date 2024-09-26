@@ -47,6 +47,7 @@ const newBooking = async (newBooking: Booking) => {
     const res = await fetch(`${BACKEND_URL}/api/bookings/new`, {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(newBooking),
