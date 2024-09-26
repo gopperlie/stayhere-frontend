@@ -5,6 +5,12 @@ interface Dates {
   endDate: string | null;
 }
 
+// interface BookingExCId {
+//   roomId: string;
+//   startDate: string;
+//   endDate: string;
+// }
+
 interface Booking {
   roomId: string;
   customerId: string;
