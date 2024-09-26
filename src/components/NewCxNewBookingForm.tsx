@@ -10,6 +10,7 @@ interface Customer {
   nationality: string;
   date_of_birth: string;
   gender: string;
+  password: string;
 }
 
 type FormBooking = {
@@ -164,6 +165,23 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           label="Gender"
           name="gender"
           value={customerData.gender}
+          onChange={handleChangeCxExEmail}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end", // Align the text fields and labels to the left
+        }}
+      >
+        <Box sx={{ marginRight: 2 }}>Gender:</Box>
+        <TextField
+          id="password"
+          label="Password"
+          name="password"
+          type="password"
+          value={customerData.password}
           onChange={handleChangeCxExEmail}
         />
       </Box>
