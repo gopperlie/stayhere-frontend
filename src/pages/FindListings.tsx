@@ -49,7 +49,11 @@ const FindListingsPage: FC = () => {
     <>
       <h1>All available listings</h1>
       <DateSelector initialDates={{ startDate, endDate }} />
-      <ShowListings rooms={rooms.availableRooms} />
+      <ShowListings
+        rooms={rooms.availableRooms}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </>
   );
 };

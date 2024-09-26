@@ -41,7 +41,10 @@ function App() {
         {/*Public Routes*/}
         <Route path="/" element={<HomePage />} />
         <Route path="/listings" element={<FindListingsPage />} />
-        <Route path="/newcxnewbooking" element={<NewCxNewBookingPage />} />
+        <Route
+          path="/newcxnewbooking/:roomId/:startDate/:endDate"
+          element={<NewCxNewBookingPage />}
+        />
         <Route
           path="/admin-login"
           element={<AdminLogInPage setUser={setUser} />}
