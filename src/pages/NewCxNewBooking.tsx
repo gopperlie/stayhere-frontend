@@ -1,15 +1,9 @@
 import { FC } from "react";
 import * as React from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  MenuItem,
-  FormControl,
-  Typography,
-} from "@mui/material";
 import { newCustomer } from "@/services/custService";
 import { newBooking } from "@/services/bookingService";
+import ShowConfirmation from "@/components/ShowConfirmation";
+import NewCxNewBookingForm from "@/components/NewCxNewBookingForm";
 
 interface Customer {
   family_name: string;
@@ -26,6 +20,22 @@ type FormBooking = {
   startDate: string;
   endDate: string;
 };
+
+type ConfBooking = {
+  booking_id: number | null;
+  room_id: number | null;
+  customer_id: number | null;
+  start_date: string;
+  end_date: string;
+  status: string;
+  date_created: string;
+  last_modified: string;
+};
+
+interface NewConfBooking {
+  message: string;
+  booking: ConfBooking;
+}
 
 const NewCxNewBookingPage: FC = () => {
   const [error, setError] = React.useState<string | null>(null);
@@ -44,6 +54,22 @@ const NewCxNewBookingPage: FC = () => {
     startDate: "",
     endDate: "",
   });
+  const [confBookingData, setConfBookingData] = React.useState<NewConfBooking>({
+    message: "",
+    booking: {
+      booking_id: null,
+      room_id: null,
+      customer_id: null,
+      start_date: "",
+      end_date: "",
+      status: "",
+      date_created: "",
+      last_modified: "",
+    },
+  });
+
+  const [reservationSuccessful, setReservationSuccessful] =
+    React.useState(false);
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -103,7 +129,8 @@ const NewCxNewBookingPage: FC = () => {
         };
 
         const newBookingResponse = await newBooking(newBookingData);
-        console.log("Booking created successfully:", newBookingResponse);
+        setConfBookingData(newBookingResponse);
+        setReservationSuccessful(true);
       } catch (err) {
         console.error("Failed to create booking:", err);
         setError("Failed to submit new booking");
@@ -112,169 +139,24 @@ const NewCxNewBookingPage: FC = () => {
   };
 
   return (
-    <Box
-      component="form"
-      sx={{
-        "& .MuiTextField-root": { m: 1.5, width: "35ch" }, // TextField margin and width
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center", // Center vertically
-        alignItems: "center", // Center horizontally
-        height: "100vh",
-        paddingTop: "64px",
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Family Name:</Box>
-        <TextField
-          id="family name"
-          label="Family Name"
-          name="family_name"
-          value={customerData.family_name}
-          onChange={handleChangeCxExEmail}
+    <>
+      {reservationSuccessful ? (
+        <ShowConfirmation
+          customerData={customerData}
+          confBookingData={confBookingData}
         />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Given Name:</Box>
-        <TextField
-          id="family name"
-          label="Given Name"
-          name="given_name"
-          value={customerData.given_name}
-          onChange={handleChangeCxExEmail}
+      ) : (
+        <NewCxNewBookingForm
+          customerData={customerData}
+          bookingData={bookingData}
+          error={error}
+          handleChangeEmail={handleChangeEmail}
+          handleChangeCxExEmail={handleChangeCxExEmail}
+          handleChangeBooking={handleChangeBooking}
+          handleSubmit={handleSubmit}
         />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Email Add:</Box>
-        <TextField
-          id="email"
-          label="Email"
-          name="email"
-          value={customerData.email}
-          onChange={handleChangeEmail}
-          helperText={error}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Nationality:</Box>
-        <TextField
-          id="nationality"
-          label="Nationality"
-          name="nationality"
-          value={customerData.nationality}
-          onChange={handleChangeCxExEmail}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Date of Birth:</Box>
-        <TextField
-          id="date_of_birth"
-          label="YYYY-MM-DD"
-          name="date_of_birth"
-          value={customerData.date_of_birth}
-          onChange={handleChangeCxExEmail}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Gender:</Box>
-        <TextField
-          id="gender"
-          label="Gender"
-          name="gender"
-          value={customerData.gender}
-          onChange={handleChangeCxExEmail}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Room ID:</Box>
-        <TextField
-          id="roomId"
-          label="roomId"
-          name="roomId"
-          value={bookingData.roomId}
-          onChange={handleChangeBooking}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>Start Date:</Box>
-        <TextField
-          id="startDate"
-          label="YYYY-MM-DD"
-          name="startDate"
-          value={bookingData.startDate}
-          onChange={handleChangeBooking}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end", // Align the text fields and labels to the left
-        }}
-      >
-        <Box sx={{ marginRight: 2 }}>End Date:</Box>
-        <TextField
-          id="endDate"
-          label="YYYY-MM-DD"
-          name="endDate"
-          value={bookingData.endDate}
-          onChange={handleChangeBooking}
-        />
-      </Box>
-      <Button variant="contained" onClick={handleSubmit}>
-        Submit new request
-      </Button>
-    </Box>
+      )}
+    </>
   );
 };
 
