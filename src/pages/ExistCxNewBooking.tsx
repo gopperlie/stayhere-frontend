@@ -1,20 +1,13 @@
 import { FC } from "react";
 import * as React from "react";
-import { newCustomer } from "@/services/custService";
 import { newBooking } from "@/services/bookingService";
 import ShowConfirmation from "@/components/ShowConfirmation";
-import NewCxNewBookingForm from "@/components/NewCxNewBookingForm";
 import { useParams } from "react-router-dom";
-import { customerSignup } from "@/services/authService";
+import { getCustomerId, cxLogin } from "@/services/custService";
+import ExistCxNewBookingForm from "@/components/ExistCxNewBookingForm";
 
-interface Customer {
-  family_name: string;
-  given_name: string;
-  email: string;
-  phone_number: string;
-  nationality: string;
-  date_of_birth: string;
-  gender: string;
+interface ExistingCustomer {
+  username: string;
   password: string;
 }
 
@@ -47,20 +40,24 @@ interface DecodedUser {
   iat: number; // issued at time
   exp: number;
 }
-
-const NewCxNewBookingPage: FC = () => {
-  const { roomId, startDate, endDate } = useParams();
-  const [error, setError] = React.useState<string | null>(null);
-  const [customerData, setCustomerData] = React.useState<Customer>({
-    family_name: "",
-    given_name: "",
+const ExistCxNewBookingPage: FC = () => {
+  const customerData = {
+    family_name: "Sir",
+    given_name: "Madam",
     email: "",
     phone_number: "",
     nationality: "",
     date_of_birth: "",
     gender: "",
     password: "",
-  });
+  };
+  const { roomId, startDate, endDate } = useParams();
+  const [error, setError] = React.useState<string | null>(null);
+  const [extCustomerData, setExtCustomerData] =
+    React.useState<ExistingCustomer>({
+      username: "",
+      password: "",
+    });
 
   const [bookingData, setBookingData] = React.useState<FormBooking>({
     roomId: roomId || "",
@@ -83,59 +80,45 @@ const NewCxNewBookingPage: FC = () => {
 
   const [reservationSuccessful, setReservationSuccessful] =
     React.useState(false);
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Set the customer data with the current value of the input
-    setCustomerData((prevData) => ({
-      ...prevData,
-      email: value,
-    }));
-
-    // Validate the email
-    if (value === "") {
-      setError(null); // Clear error if the email is empty
-    } else if (emailRegex.test(value)) {
-      setError(null); // Clear error if valid
-    } else {
-      setError("Invalid email address."); // Set error if invalid
-    }
-  };
-  const handleChangeCxExEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCustomerData((prevData) => ({
+    setExtCustomerData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let customerId: string | null = null; // Declare customerId in the outer scope
     let user: DecodedUser | null = null;
 
-    // Step 1: Create the customer
+    // Step 1: Customer logs in
     try {
-      const newSubmitResponse = await newCustomer(customerData);
-      customerId = newSubmitResponse.customer.customer_id; // Assign value to customerId
-      console.log("Customer created successfully:", customerId);
+      user = await cxLogin(extCustomerData); // Assign value to customerId
+      console.log("Customer logged in successfully");
     } catch (err) {
-      console.error("Failed to create customer:", err);
-      setError("Failed to submit customer data");
-      return; // Exit if customer creation fails
+      console.error("Failed to log in customer:", err);
+      setError("Failed to log in");
+      console.log(error);
+      return; // Exit if fail to log in
     }
 
-    // Step 2: Signup the customer
-    try {
-      const { email, password } = customerData;
-      const cxSignUpData = { email, password };
-      user = await customerSignup(cxSignUpData);
-    } catch (err) {
-      console.error("Failed to signup customer:", err);
-      setError("Failed to signup customer data");
-      return; // Exit if customer signup fails
+    if (user) {
+      try {
+        const { username } = extCustomerData;
+        const cxEmail = {
+          email: username,
+        };
+        const submitResponse = await getCustomerId(cxEmail);
+        customerId = submitResponse.customer_id;
+        console.log(customerId);
+      } catch (err) {
+        console.error("Failed to get customer ID:", err);
+        setError("Failed to get customer ID");
+        console.log(error);
+        return; // Exit if customer signup fails
+      }
     }
 
     // Step 3: Create the booking
@@ -156,6 +139,7 @@ const NewCxNewBookingPage: FC = () => {
       }
     }
   };
+
   React.useEffect(() => {
     if (roomId) {
       setBookingData((prev) => ({ ...prev, roomId }));
@@ -167,7 +151,6 @@ const NewCxNewBookingPage: FC = () => {
       setBookingData((prev) => ({ ...prev, endDate }));
     }
   }, [roomId, startDate, endDate]);
-
   return (
     <>
       {reservationSuccessful ? (
@@ -176,12 +159,10 @@ const NewCxNewBookingPage: FC = () => {
           confBookingData={confBookingData}
         />
       ) : (
-        <NewCxNewBookingForm
-          customerData={customerData}
+        <ExistCxNewBookingForm
+          extCustomerData={extCustomerData}
           bookingData={bookingData}
-          error={error}
-          handleChangeEmail={handleChangeEmail}
-          handleChangeCxExEmail={handleChangeCxExEmail}
+          handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
       )}
@@ -189,4 +170,4 @@ const NewCxNewBookingPage: FC = () => {
   );
 };
 
-export default NewCxNewBookingPage;
+export default ExistCxNewBookingPage;

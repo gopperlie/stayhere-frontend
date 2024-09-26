@@ -25,7 +25,6 @@ interface NewCxNewBookingFormProps {
   error: string | null;
   handleChangeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleChangeCxExEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleChangeBooking: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
 }
 
@@ -175,7 +174,7 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           justifyContent: "flex-end", // Align the text fields and labels to the left
         }}
       >
-        <Box sx={{ marginRight: 2 }}>Gender:</Box>
+        <Box sx={{ marginRight: 2 }}>Password:</Box>
         <TextField
           id="password"
           label="Password"

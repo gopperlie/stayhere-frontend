@@ -58,7 +58,16 @@ const ShowListings: React.FC<RoomsListProps> = ({
             >
               Book
             </Button>
-            <Button size="small">Learn More</Button>
+            <Button
+              size="small"
+              onClick={() =>
+                navigate(
+                  `/extcxnewbooking/${room.room_id}/${startDate}/${endDate}`
+                )
+              }
+            >
+              Re Cx Book
+            </Button>
           </CardActions>
         </Card>
       ))}
