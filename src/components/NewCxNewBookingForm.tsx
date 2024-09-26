@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Box, TextField, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface Customer {
   family_name: string;
@@ -36,6 +37,7 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
   handleSubmit,
   //   handleChangeBooking,
 }) => {
+  const navigate = useNavigate();
   return (
     <Box
       component="form"
@@ -197,9 +199,24 @@ const NewCxNewBookingForm: FC<NewCxNewBookingFormProps> = ({
           disabled={true}
         />
       </Box>
-      <Button variant="contained" type="submit">
-        Submit new request
-      </Button>
+      <Box
+        sx={{
+          display: "flex", // Align buttons horizontally
+          justifyContent: "space-between", // Optional: space between buttons
+          gap: 2, // Optional: gap between buttons
+        }}
+      >
+        <Button variant="contained" color="primary" type="submit">
+          Pay and confirm
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => navigate("/")}
+        >
+          Select new dates
+        </Button>
+      </Box>
     </Box>
   );
 };
