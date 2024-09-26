@@ -3,18 +3,11 @@ import * as React from "react";
 import { newCustomer } from "@/services/custService";
 import { newBooking } from "@/services/bookingService";
 import ShowConfirmation from "@/components/ShowConfirmation";
-import NewCxNewBookingForm from "@/components/NewCxNewBookingForm";
 import { useParams } from "react-router-dom";
 import { customerSignup } from "@/services/authService";
 
-interface Customer {
-  family_name: string;
-  given_name: string;
+interface ExistingCustomer {
   email: string;
-  phone_number: string;
-  nationality: string;
-  date_of_birth: string;
-  gender: string;
   password: string;
 }
 
@@ -47,18 +40,11 @@ interface DecodedUser {
   iat: number; // issued at time
   exp: number;
 }
-
-const NewCxNewBookingPage: FC = () => {
+const ExistCxNewBookingPage: FC = () => {
   const { roomId, startDate, endDate } = useParams();
   const [error, setError] = React.useState<string | null>(null);
-  const [customerData, setCustomerData] = React.useState<Customer>({
-    family_name: "",
-    given_name: "",
+  const [customerData, setCustomerData] = React.useState<ExistingCustomer>({
     email: "",
-    phone_number: "",
-    nationality: "",
-    date_of_birth: "",
-    gender: "",
     password: "",
   });
 
@@ -83,48 +69,28 @@ const NewCxNewBookingPage: FC = () => {
 
   const [reservationSuccessful, setReservationSuccessful] =
     React.useState(false);
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Set the customer data with the current value of the input
-    setCustomerData((prevData) => ({
-      ...prevData,
-      email: value,
-    }));
-
-    // Validate the email
-    if (value === "") {
-      setError(null); // Clear error if the email is empty
-    } else if (emailRegex.test(value)) {
-      setError(null); // Clear error if valid
-    } else {
-      setError("Invalid email address."); // Set error if invalid
-    }
-  };
-  const handleChangeCxExEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCustomerData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     let customerId: string | null = null; // Declare customerId in the outer scope
     let user: DecodedUser | null = null;
 
-    // Step 1: Create the customer
+    // Step 1: Customer logs in
     try {
-      const newSubmitResponse = await newCustomer(customerData);
+      const newSubmitResponse = await customerLogin(customerData);
       customerId = newSubmitResponse.customer.customer_id; // Assign value to customerId
-      console.log("Customer created successfully:", customerId);
+      console.log("Customer logged in successfully:", customerId);
     } catch (err) {
       console.error("Failed to create customer:", err);
       setError("Failed to submit customer data");
-      return; // Exit if customer creation fails
+      return; // Exit if fail to log in
     }
 
     // Step 2: Signup the customer
@@ -156,37 +122,7 @@ const NewCxNewBookingPage: FC = () => {
       }
     }
   };
-  React.useEffect(() => {
-    if (roomId) {
-      setBookingData((prev) => ({ ...prev, roomId }));
-    }
-    if (startDate) {
-      setBookingData((prev) => ({ ...prev, startDate }));
-    }
-    if (endDate) {
-      setBookingData((prev) => ({ ...prev, endDate }));
-    }
-  }, [roomId, startDate, endDate]);
-
-  return (
-    <>
-      {reservationSuccessful ? (
-        <ShowConfirmation
-          customerData={customerData}
-          confBookingData={confBookingData}
-        />
-      ) : (
-        <NewCxNewBookingForm
-          customerData={customerData}
-          bookingData={bookingData}
-          error={error}
-          handleChangeEmail={handleChangeEmail}
-          handleChangeCxExEmail={handleChangeCxExEmail}
-          handleSubmit={handleSubmit}
-        />
-      )}
-    </>
-  );
+  return <></>;
 };
 
-export default NewCxNewBookingPage;
+export default ExistCxNewBookingPage;

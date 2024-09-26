@@ -25,7 +25,6 @@ interface NewCxNewBookingFormProps {
   error: string | null;
   handleChangeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleChangeCxExEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleChangeBooking: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
 }
 
