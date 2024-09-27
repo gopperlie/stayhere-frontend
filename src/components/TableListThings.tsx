@@ -28,6 +28,7 @@ import { cancelBooking } from "@/services/bookingService";
 const TableListThings: FC = () => {
   const [allBookings, setAllBookings] = useState<Booking[]>([]); // Set the type to an array of bookings
   const [error, setError] = useState<string | null>(null);
+  const [reload, setReload] = useState(false);
   const navigate = useNavigate();
 
   // useEffect to fetch bookings on component mount
@@ -43,7 +44,7 @@ const TableListThings: FC = () => {
     };
 
     fetchBookings();
-  }, []); // Empty dependency array to run once on mount
+  }, [reload]); // Empty dependency array to run once on mount
 
   // Render loading or error state
   if (error) {
@@ -56,8 +57,8 @@ const TableListThings: FC = () => {
 
   const handleCancel = async (bookingId: string) => {
     try {
-      cancelBooking(bookingId);
-      window.location.reload();
+      await cancelBooking(bookingId); // Await the cancellation
+      setReload(!reload);
     } catch (err) {
       console.error("Failed to cancel", err);
     }
