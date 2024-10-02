@@ -5,7 +5,7 @@ import { Paper, Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as authService from "../services/authService";
-import { useAuthedUser } from "@/components/useAuthedUserHook";
+import { useAuthedUser } from "@/providers/useAuthedUserHook";
 
 // type user = {
 //   username: string;

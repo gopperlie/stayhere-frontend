@@ -16,7 +16,7 @@ Admin Panel: Admins can manage bookings, including editing and canceling reserva
 
 Technology Stack
 
-### Frontend:
+### Frontend
 
 React: A JavaScript library for building user interfaces.
 

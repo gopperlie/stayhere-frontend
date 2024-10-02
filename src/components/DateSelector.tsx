@@ -8,6 +8,7 @@ import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { Container, Button } from "@mui/material";
 import { FC } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { DatePickerWithRange } from "./DateRangePicker";
 
 // interface Dates {
 //   startDate: Dayjs | null;
@@ -56,14 +57,13 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Container
         maxWidth="sm"
-        // style={{
-        //   display: "flex", // Enable flexbox
-        //   flexDirection: "column", // Stack items vertically
-        //   justifyContent: "center", // Center items vertically
-        //   alignItems: "center", // Center items horizontally
-        //   minHeight: "100vh", // Make the container fill the viewport height
-        // }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          border: "2px solid black", // Visible border to make the margin more apparent
+        }}
       >
+        {/* <DatePickerWithRange /> */}
         <DateRangePicker
           value={dates}
           localeText={{
@@ -72,6 +72,7 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
           }}
           onChange={handleDateRangeChange}
         />
+
         <Button variant="contained" onClick={handleSubmit}>
           Find rooms
         </Button>
