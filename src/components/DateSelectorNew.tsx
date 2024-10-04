@@ -1,42 +1,47 @@
 import * as React from "react";
 import dayjs, { Dayjs } from "dayjs";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateRange } from "@mui/x-date-pickers-pro/models";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { DateRange } from "react-day-picker";
 import { Container, Button } from "@mui/material";
 import { FC } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-// interface Dates {
-//   startDate: Dayjs | null;
-//   endDate: Dayjs | null;
-// }
+import { DatePickerWithRange } from "./DateRangePicker";
 
 interface DateSelectorProps {
-  initialDates: { startDate: string | null; endDate: string | null };
+  initialDates: { from: string | undefined; to: string | undefined };
 }
 
-const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
-  const [dates, setDates] = React.useState<DateRange<Dayjs>>([
-    initialDates.startDate ? dayjs(initialDates.startDate) : null,
-    initialDates.endDate ? dayjs(initialDates.endDate) : null,
-  ]);
+const DateSelectorNew: FC<DateSelectorProps> = ({ initialDates }) => {
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: initialDates?.from ? dayjs(initialDates.from).toDate() : undefined,
+    to: initialDates?.to ? dayjs(initialDates.to).toDate() : undefined,
+  });
 
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  console.log(`searchParams:${searchParams}`);
 
-  const handleDateRangeChange = (newRange: DateRange<Dayjs>) => {
-    setDates(newRange);
+  const convertDateToDayjs = (date: Date | undefined): Dayjs | undefined => {
+    return date ? dayjs(date) : undefined; // Convert to dayjs or return null if undefined
+  };
+
+  const handleDateChange = (selectedDate: DateRange | undefined) => {
+    if (selectedDate) {
+      setDate({
+        from: convertDateToDayjs(selectedDate.from)?.toDate() || undefined,
+        to: convertDateToDayjs(selectedDate.to)?.toDate() || undefined,
+      });
+    } else {
+      setDate(undefined); // Handle case where no date is selected
+    }
+    console.log(selectedDate); // You can use `selectedDate` in the parent component
   };
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
     const formattedDates = {
-      startDate: dates[0] ? dates[0]!.format("YYYY-MM-DD") : null,
-      endDate: dates[1] ? dates[1]!.format("YYYY-MM-DD") : null,
+      startDate: date?.from ? dayjs(date.from).format("YYYY-MM-DD") : null,
+      endDate: date?.to ? dayjs(date.to).format("YYYY-MM-DD") : null,
     };
 
     const params = new URLSearchParams();
@@ -46,9 +51,6 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
     if (formattedDates.endDate) {
       params.append("endDate", formattedDates.endDate);
     }
-    setSearchParams(params);
-
-    // Navigate to listings with the new params
     navigate(`/listings?${params.toString()}`);
   };
 
@@ -62,14 +64,7 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
           border: "2px solid black", // Visible border to make the margin more apparent
         }}
       >
-        <DateRangePicker
-          value={dates}
-          localeText={{
-            start: "From",
-            end: "To",
-          }}
-          onChange={handleDateRangeChange}
-        />
+        <DatePickerWithRange onDateChange={handleDateChange} />
 
         <Button variant="contained" onClick={handleSubmit}>
           Find rooms
@@ -79,4 +74,4 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
   );
 };
 
-export default DateSelector;
+export default DateSelectorNew;

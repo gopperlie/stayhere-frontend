@@ -79,6 +79,7 @@ function App() {
         />
         <Route path="/admin-login" element={<AdminLogInPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
+        {/* <Route path="/testpage" element={<Testpage />} /> */}
 
         {/* <Route path="/allProperties" element={<StayhereProperties />} />
         <Route path="/allRooms" element={<StayhereRooms />} />
