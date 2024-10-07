@@ -1,13 +1,15 @@
 import { FC } from "react";
-import DatesSelector from "../components/DateSelector";
+// import DatesSelector from "../components/DateSelector";
 import { Greeting } from "../components/Greeting";
 import { useSearchParams } from "react-router-dom";
 import { Container } from "@mui/material";
+import DateSelectorNew from "../components/DateSelectorNew";
+// import { DatePickerWithRange } from "@/components/DateRangePicker";
 
 const HomePage: FC = () => {
   const [searchParams] = useSearchParams();
-  const startDate = searchParams.get("startDate") || null;
-  const endDate = searchParams.get("endDate") || null;
+  const from = searchParams.get("startDate") || undefined;
+  const to = searchParams.get("endDate") || undefined;
 
   return (
     <Container
@@ -24,7 +26,8 @@ const HomePage: FC = () => {
       maxWidth="xl"
     >
       <Greeting />
-      <DatesSelector initialDates={{ startDate, endDate }} />
+      <DateSelectorNew initialDates={{ from, to }} />
+      {/* <DatePickerWithRange /> */}
     </Container>
   );
 };

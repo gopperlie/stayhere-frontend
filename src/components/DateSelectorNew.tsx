@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateRange } from "react-day-picker";
 import { Container, Button } from "@mui/material";
 import { FC } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DatePickerWithRange } from "./DateRangePicker";
 
 interface DateSelectorProps {

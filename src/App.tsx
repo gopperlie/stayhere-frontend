@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage";
 import FindListingsPage from "./pages/FindListings";
 import AdminLogInPage from "./pages/AdminLogIn";
 import * as authService from "../src/services/authService";
@@ -7,6 +6,7 @@ import AdminDashPage from "./pages/AdminDash";
 import NavbarAdmin from "./components/NavbarAdmin";
 import BookingsPage from "./pages/Bookings";
 import ModifyBookingPage from "./pages/ModifyBookingPage";
+import HomePage from "./pages/HomePage";
 import NewCxNewBookingPage from "./pages/NewCxNewBooking";
 import { useAuthedUser } from "./providers/useAuthedUserHook";
 import UnauthorizedPage from "./pages/UnauthorisedPage";
@@ -79,7 +79,6 @@ function App() {
         />
         <Route path="/admin-login" element={<AdminLogInPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
-        {/* <Route path="/testpage" element={<Testpage />} /> */}
 
         {/* <Route path="/allProperties" element={<StayhereProperties />} />
         <Route path="/allRooms" element={<StayhereRooms />} />
