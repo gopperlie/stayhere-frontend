@@ -56,13 +56,11 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Container
         maxWidth="sm"
-        // style={{
-        //   display: "flex", // Enable flexbox
-        //   flexDirection: "column", // Stack items vertically
-        //   justifyContent: "center", // Center items vertically
-        //   alignItems: "center", // Center items horizontally
-        //   minHeight: "100vh", // Make the container fill the viewport height
-        // }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          border: "2px solid black", // Visible border to make the margin more apparent
+        }}
       >
         <DateRangePicker
           value={dates}
@@ -72,6 +70,7 @@ const DateSelector: FC<DateSelectorProps> = ({ initialDates }) => {
           }}
           onChange={handleDateRangeChange}
         />
+
         <Button variant="contained" onClick={handleSubmit}>
           Find rooms
         </Button>
